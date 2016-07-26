@@ -454,6 +454,20 @@ window.POG=(function() {
         return cloned.outerHTML;
     }
 
+    function tr( text, search, replace ) {
+    // Make the search string a regex.
+    var regex = RegExp( '[' + search + ']', 'g' );
+    var t = text.replace( regex, 
+            function( chr ) {
+                // Get the position of the found character in the search string.
+                var ind = search.indexOf( chr );
+                // Get the corresponding character from the replace string.
+                var r = replace.charAt( ind );
+                return r;
+            } );
+    return t;
+    }
+
     function getSanitizedText(text, max) {
         var texts = (text || '').split(/\s+/g);
 
@@ -461,7 +475,10 @@ window.POG=(function() {
             texts = texts.slice(0, max);
         }
 
-        return texts.join(' ').trim().replace(/[^a-zA-Z0-9\. ]/g, '');
+
+        var text = tr(texts.join(' ').trim(),"ąćęłńóśźżĄĆĘŁŃÓŚŹŻ","acelnoszzACELNOSZZ")
+		console.log(text);
+		return text.replace(/[^a-zA-Z0-9\. ]/g, '');
     }
 
     function getSentences(text, minimumWords) {
